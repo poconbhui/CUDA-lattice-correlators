@@ -5,8 +5,8 @@ My final year project for Theoretical Physics.
 
 This project aimed to write CUDA kernels for computing two point correlator
 functions. For this, I explored implementing matrix multipliation kernels.
-I managed to beat the CUBLAS implementation on the computer I was working on
-by 35% for batch multiplication jobs.
+I managed to beat the CUBLAS CGEMM implementation on the computer
+I was working on by 35% for batch multiplication jobs.
 
 For the particular problem I was working on, I could also fold some sparse
 matrix multiplications into my kernels, further improving overall performance.
