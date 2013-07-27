@@ -1,0 +1,60 @@
+#ifndef DEFINES_H
+#define DEFINES_H
+
+//Defines
+#define TEST_DEFS
+
+
+//TEST_DEFS
+//Attempting to multiply multiple matrices
+#ifdef TEST_DEFS
+#define T_OUTER_LOOP
+//#define SUPPRESS_PRINT_LOADS
+#define PRINT_C_MATRIX
+//#define DEBUG
+//#define PRINT_FUNC_RETURNS
+#define PRINT_SHORT_LOAD_PROGRESS
+#define DATABASE_SERIAL
+
+#define C_MATRIX_DIM 1 //trace return 1 number
+#define PHI_MATRIX_DIM 5 //5x5 matrices - Be careful MULTI_BLOC_DIM doesn't exceed maximum allowed value.
+
+#define TIME_LEN 2
+#define T_CHUNKSIZE 1
+#define DELTA_CHUNKSIZE 2
+
+#define INITIALIZE_GRID_DIM_C TIME_LEN
+#define INITIALIZE_BLOCK_DIM_C (C_MATRIX_DIM*C_MATRIX_DIM)
+
+#define MULTIPLY_DEFS_1
+#define MULTI_GRID_DIM_X PHI_MATRIX_DIM
+#define MULTI_GRID_DIM_Y PHI_MATRIX_DIM
+#define MULTI_BLOCK_DIM_X T_CHUNKSIZE
+#define MULTI_BLOCK_DIM_Y DELTA_CHUNKSIZE
+#define MULTI_BLOCK_DIM_Z (2*C_MATRIX_DIM)
+
+#define TRACE_GRID_DIM_X C_MATRIX_DIM
+#define TRACE_GRID_DIM_Y C_MATRIX_DIM
+#define TRACE_BLOCK_DIM_X DELTA_CHUNKSIZE
+#define TRACE_BLOCK_DIM_Y 1
+#define TRACE_BLOCK_DIM_Z 1
+
+#define I_USUAL_MATRIX
+#define T_USUAL_MATRIX
+//#define I_UNIT_MATRIX
+//#define T_UNIT_MATRIX
+
+//#define PULL_X
+#define PULL_X_H 0
+#define PULL_X_I 0
+#define PULL_X_T 0
+#define PULL_X_D 0
+#define PULL_X_POS ( \
+		PULL_X_H*C_MATRIX_DIM*T_CHUNKSIZE*DELTA_CHUNKSIZE*PHI_MATRIX_DIM*PHI_MATRIX_DIM + \
+		PULL_X_I*DELTA_CHUNKSIZE*T_CHUNKSIZE*PHI_MATRIX_DIM*PHI_MATRIX_DIM + \
+		PULL_X_D*T_CHUNKSIZE*PHI_MATRIX_DIM*PHI_MATRIX_DIM + \
+		PULL_X_T*PHI_MATRIX_DIM*PHI_MATRIX_DIM \
+		)
+#endif //Done TEST_DEFS
+
+#endif

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+
+if [ -s cuProfile_config ];then	
+	export CUDA_PROFILE_CONFIG=cuProfile_config
+fi
+
+export CUDA_PROFILE=1
+
+./$1
+
+echo -e "\n\n\n\n\n"
+
+echo "-------------------------------------"
+echo "	Begin Cuda Profiler		"
+echo "-------------------------------------"
+echo
+
+cat cuda_profile_0.log
+
+echo
+echo

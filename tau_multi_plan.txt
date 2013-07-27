@@ -1,0 +1,63 @@
+Have C_ij(d) = Sum_t Tr( I^i . T(t,t+d) . I^j . T*(t,t+d) )
+Want C
+
+All numbers are complex floats -> 8 bytes per entry
+T is 256x256, t,d are (1,128)
+I^j is 256x25g, J is (1,40)
+
+
+Each T matrix has 256x256 entries = 65536 entries = 512 kB
+128 values for t, so space for an entire set of T matrices for a given d = 128 matrices = 8,388,608 entries = 64 MB
+For all t and d, have = 16,384 (=128x128) matrices = 1,073,741,824 entries = 8 GB
+
+Each I matrix also 256x256 -> 65536 entries = 512 kb
+~40 values for j, space for entire I = 40 matrices = 2,621,440 entries = 20 MB
+
+Each matrix X^jh(t,d) = I^j . T(h)(t,t+d) is 256x256 = 65536 entries = 512 kB
+Here, h is (0,1) denoting T or T* was used
+All X^jh(t,d) for a given t,d = 80 (=2x40) matrices = 5,242,880 entries = 40 MB
+All X^jh(t,d) for a given d = 10,240 (=2x40x128) matrices = 671,088,640 entries = 5 GB
+All X^jh(t,d) = 1,310,720 (=2x40x128x128) matrices = 85,899,345,920 entries = 640 GB
+
+If algorithm is performed with d as the outer loop for loading different T matrices onto the card, there should be more than enough computations to keep the card busy.
+
+Tesla C1060 has 4 GB of memory. Quadro 4000 has 2GB of memory. Could do everything in maybe 4 passes.
+
+
+I^i . T(t,t+d) = 40x128 n^3
+Tr(X^ih . X^jh) = 40x40x2xn^2 (x2 because it is assumed each dot product is added directly to C_ij)
+Sum_t Tr(...) = 128x40x40x2xn^2
+
+So... C(d) should be ~ 10^3 n^3 + 10^4 n^2
+n ~ 100 -> C(d) ~ 10^3 100^3 + 10^4 100^2 = 10^3 10^4 + 10^4 10^3 = 2x10^4
+ie - Both parts of the algorithm should take about the same time if done that way.
+
+Maybe compute all X^i(t,d) for a given d, since everything SHOULD fit onto the Tesla C1060...
+Add Tr(X^i(t,d) . X^j(t,d)) to C_ij(d)
+Repeat for next d.
+
+SO...
+1. Copy all I^j to card - 20 MB used
+2. Copy all T(t,t+d) for a given d to card - 84 MB used
+3. Compute X^i(t,t+d) for a given d, but say 0<t<128 - 2.58 GB used (say)
+	compute as 4d matrix X[t][i][x][y] (or whichever way around will best coalesce the memory)
+	entry computed by a thread will be a function of the blockid and threadid.
+	there aren't enough dimensions to simply use blockid.xyz to decide.
+	probably use something like X[t_i][x][y] where t_i = t*40 + i = 5140 max
+4. Compute C_ij(d) for a given d with some interval of t- 2.58 GB used (still)
+	compute as 2d matrix C[i][j]
+	entry to work on function of blockid, dot product to compute function of threadid.
+5. Delete all X^i(t,t+d) - 20.5 MB used
+6. Repeat 3,4,5 for a new interval of t, add to the old C_ij found.
+7. Copy C_ij(d) to host, delete from card - 20 MB used
+8. Repeat for next d
+
+
+
+Computing X^i fine, since each entry is indep of each other.
+Problem with computing C_ij - each thread should work on only 1 entry
+	but since each entry is a sum of points to be calculated by some threads
+	solution - each block could work on each entry
+		~40^2 blocks - 1,600 blocks
+
+

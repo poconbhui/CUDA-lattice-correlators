@@ -1,0 +1,13 @@
+# CUDA_PROFILE_LOG_VERSION 2.0
+# CUDA_DEVICE 0 Tesla C1060
+# TIMESTAMPFACTOR fffff6dcde9274b8
+timestamp,method,gputime,cputime,occupancy
+timestamp=[ 7775.000 ] method=[ memcpyHtoD ] gputime=[ 3.744 ] cputime=[ 4.000 ] 
+timestamp=[ 7785.000 ] method=[ memcpyHtoD ] gputime=[ 3.456 ] cputime=[ 3.000 ] 
+timestamp=[ 7823.000 ] method=[ _Z14MultiplyKernelP6float2S0_S0_ ] gputime=[ 7.392 ] cputime=[ 5.000 ] occupancy=[ 0.250 ] 
+timestamp=[ 7832.000 ] method=[ _Z11TraceKernelP6float2S0_i ] gputime=[ 10.016 ] cputime=[ 3.000 ] occupancy=[ 0.031 ] 
+timestamp=[ 7841.000 ] method=[ memcpyHtoD ] gputime=[ 3.712 ] cputime=[ 3.000 ] 
+timestamp=[ 7864.000 ] method=[ memcpyHtoD ] gputime=[ 4.192 ] cputime=[ 3.000 ] 
+timestamp=[ 7880.000 ] method=[ _Z14MultiplyKernelP6float2S0_S0_ ] gputime=[ 7.200 ] cputime=[ 3.000 ] occupancy=[ 0.250 ] 
+timestamp=[ 7887.000 ] method=[ _Z11TraceKernelP6float2S0_i ] gputime=[ 10.048 ] cputime=[ 3.000 ] occupancy=[ 0.031 ] 
+timestamp=[ 7892.000 ] method=[ memcpyDtoH ] gputime=[ 3.968 ] cputime=[ 20.000 ] 
